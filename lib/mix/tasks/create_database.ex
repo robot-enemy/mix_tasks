@@ -22,6 +22,8 @@ defmodule Mix.Tasks.CreateDatabase do
     {opts, _, _} = OptionParser.parse(args, strict: @switches, aliases: @aliases) |> IO.inspect()
 
     Enum.each repos, fn repo ->
+      ensure_repo(repo, args)
+
       db_name = repo.config()[:database]
       db_user = repo.config()[:username]
 
