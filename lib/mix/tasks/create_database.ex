@@ -19,7 +19,7 @@ defmodule Mix.Tasks.CreateDatabase do
 
   def run(args) do
     repos = parse_repo(args)
-    {opts, _, _} = OptionParser.parse(args, strict: @switches, aliases: @aliases) |> IO.inspect()
+    {opts, _, _} = OptionParser.parse(args, strict: @switches, aliases: @aliases)
 
     Enum.each repos, fn repo ->
       ensure_repo(repo, args)
