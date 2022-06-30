@@ -35,12 +35,14 @@ defmodule Mix.Tasks.CreateDatabase do
       psql_run(db_name, "REVOKE ALL ON SCHEMA public FROM PUBLIC;", opts)
       psql_run(db_name, "REVOKE USAGE ON SCHEMA public FROM #{db_user};", opts)
 
-      # Create the schema if it doesn't exist, and grant the role full priviledges
-      psql_run(db_name, "CREATE SCHEMA IF NOT EXISTS #{db_user};", opts)
-      psql_run(db_name, "GRANT ALL ON SCHEMA #{db_user} TO #{db_user};", opts)
+      if schema = repo.config()[:migration_default_prefix] do
+        # Create the schema if it doesn't exist, and grant the role full priviledges
+        psql_run(db_name, "CREATE SCHEMA IF NOT EXISTS #{schema};", opts)
+        psql_run(db_name, "GRANT ALL ON SCHEMA #{schema} TO #{db_user};", opts)
 
-      # Set the role's search_path to only include the schema
-      psql_run(db_name, "ALTER ROLE #{db_user} SET search_path=#{db_user};", opts)
+        # Set the role's search_path to only include the schema
+        psql_run(db_name, "ALTER ROLE #{db_user} SET search_path=#{schema};", opts)
+      end
     end
   end
 
